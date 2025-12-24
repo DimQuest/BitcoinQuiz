@@ -1,0 +1,2 @@
+# BitcoinQuiz
+A fun, interactive bilingual quiz (English/Indonesian) to determine your Bitcoin investment readiness and assign you a creative crypto persona and tips to learn more.
