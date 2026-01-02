@@ -1,4 +1,3 @@
-
 import React, { useMemo, useEffect, useState } from 'react';
 import { Language, UserAnswer } from '../types';
 import { PERSONAS, QUESTIONS } from '../constants';
@@ -44,11 +43,10 @@ const Results: React.FC<ResultsProps> = ({ lang, answers, onReset }) => {
 
   useEffect(() => {
     const fetchAnalysis = async () => {
-      // Safely access the API key to prevent crashes if 'process' is undefined
       const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : undefined;
       
       if (!apiKey) {
-        console.warn("API_KEY not found in process.env. AI Analysis skipped.");
+        console.warn("API_KEY not found. AI Analysis skipped.");
         return;
       }
 
@@ -68,14 +66,13 @@ const Results: React.FC<ResultsProps> = ({ lang, answers, onReset }) => {
           Base Persona: ${persona.name.en}
           
           TASK: 
-          1. Generate a 'narrative': A 2-3 sentence personalized description that explains why they fit this persona based on their specific answers. Make it punchy, engaging, and friendly. 
-          2. Generate 3 'insights' (green/red flags) explaining their readiness with a balanced view.
+          1. Generate a 'narrative': A 2-3 sentence personalized description.
+          2. Generate 3 'insights' (green/red flags).
 
           CRITICAL GUIDELINES:
-          - STRATEGY (DCA vs All-in): Explain that for beginners, buying with a fixed amount regularly (Dollar Cost Averaging / DCA) is generally lower risk.
-          - TIME HORIZON: Be neutral but highlight that short-term volatility is higher risk.
-          - LANGUAGE: ${lang === 'en' ? 'English' : 'Natural, refined Bahasa Indonesia. Use local phrasing like "Uang dingin", "Tabungan rutin", "Kena mental", "Sabar menunggu".'}.
-          - NO FINANCIAL ADVICE: Strictly educational.
+          - STRATEGY: Mention DCA (Dollar Cost Averaging).
+          - LANGUAGE: ${lang === 'en' ? 'English' : 'Natural Bahasa Indonesia (e.g., "Uang dingin", "Kena mental")'}.
+          - NO FINANCIAL ADVICE.
         `;
 
         const response = await ai.models.generateContent({
@@ -107,7 +104,12 @@ const Results: React.FC<ResultsProps> = ({ lang, answers, onReset }) => {
         });
         
         if (response.text) {
-          const parsed = JSON.parse(response.text) as AIAnalysis;
+          // Robust parsing in case of markdown wrapping
+          let cleanText = response.text.trim();
+          if (cleanText.startsWith('```')) {
+            cleanText = cleanText.replace(/^```(json)?\n?/, '').replace(/\n?```$/, '');
+          }
+          const parsed = JSON.parse(cleanText) as AIAnalysis;
           setAnalysis(parsed);
         }
       } catch (e) {

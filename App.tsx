@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { Language, UserAnswer } from './types';
 import { QUESTIONS } from './constants';
 import Header from './components/Header';
 import Quiz from './components/Quiz';
 import Results from './components/Results';
+import LanguageSelector from './components/LanguageSelector';
 
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('en');
@@ -42,20 +42,8 @@ const App: React.FC = () => {
   if (!isStarted) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-slate-950/20">
-        <div className="absolute top-6 right-6 flex items-center gap-3 text-xs font-bold uppercase tracking-widest">
-           <button 
-             onClick={() => setLang('en')} 
-             className={`transition-colors ${lang === 'en' ? 'text-orange-400' : 'text-slate-500 hover:text-orange-300'}`}
-           >
-             English
-           </button>
-           <span className="text-slate-700">|</span>
-           <button 
-             onClick={() => setLang('id')} 
-             className={`transition-colors ${lang === 'id' ? 'text-orange-400' : 'text-slate-500 hover:text-orange-300'}`}
-           >
-             Indonesia
-           </button>
+        <div className="absolute top-6 right-6 z-50">
+           <LanguageSelector currentLang={lang} onSelect={setLang} />
         </div>
         
         <div className="max-w-xl w-full text-center animate-in fade-in zoom-in duration-700">
