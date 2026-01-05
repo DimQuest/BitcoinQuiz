@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Language, UserAnswer } from './types';
 import { QUESTIONS } from './constants';
+import { Analytics } from '@vercel/analytics/react';
 import Header from './components/Header';
 import Quiz from './components/Quiz';
 import Results from './components/Results';
@@ -103,6 +104,8 @@ const App: React.FC = () => {
       <footer className="mt-12 text-center text-slate-600 text-xs px-4 uppercase tracking-[0.2em]">
         <p>{lang === 'en' ? "Education only • No financial advice" : "Hanya edukasi • Bukan saran keuangan"}</p>
       </footer>
+
+      <Analytics />
     </div>
   );
 };
